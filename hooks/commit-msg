@@ -1,0 +1,3 @@
+#!/bin/sh
+
+node ../pages/validate-commit-msg.js $1 "`cat $1`"
