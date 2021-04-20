@@ -51,7 +51,7 @@ if (gitmoji) {
   if (gitmoji.startsWith(':')) {
     const idx = PREFIXES.findIndex(p => subject.startsWith(p))
     subject = subject.replace(gitmoji, PREFIXES[idx - 1])
-    console.log('🧹 Replacing label with emoji')
+    console.log(`🧹 Replacing gitmoji label "${gitmoji}" with emoji ${PREFIXES[idx - 1]}`)
   }
 
   // 1. Separate subject from body with a blank line
@@ -59,7 +59,7 @@ if (gitmoji) {
 
   // 2. Limit the subject line to 50 characters
   if (subject.length > 50) {
-    console.log(`😞 Message is ${subject.length} characters but ought to be below 50`)
+    console.log(`👮‍♀️ Message is ${subject.length} characters but ought to be below 50`)
     if (STRICT) process.exit(1)
   }
 
@@ -77,14 +77,14 @@ if (gitmoji) {
 
   // 5. Use the imperative mood in the subject line
   if (['fixed', 'minor', 'removed', 'applied', 'adjusted', 'added', 'updated'].includes(firstWord.toLowerCase())) {
-    console.log(`😞 Use imperative mood instead i.e. you should be able to complete this line`)
+    console.log(`👮 Use imperative mood instead i.e. you should be able to complete this line`)
     console.log(`   "If applied, this commit will ..."`)
     if (STRICT) process.exit(1)
   }
 
   // 6. Wrap the body at 72 characters
   if (body.find(b => b.length > 72)) {
-    console.log(`😞 One or more lines in your body have a length above 72 characters`)
+    console.log(`👮‍♂️ One or more lines in your body have a length above 72 characters`)
     if (STRICT) process.exit(1)
   }
 
