@@ -46,12 +46,12 @@ if (subject.startsWith('Revert ')) {
 
 const gitmoji = PREFIXES.find(p => subject.startsWith(p))
 if (gitmoji) {
-  console.log('✅ Message is correctly prefixed with an gitmoji')
+  console.log(' ✅ Message is correctly prefixed with an gitmoji')
 
   if (gitmoji.startsWith(':')) {
     const idx = PREFIXES.findIndex(p => subject.startsWith(p))
     subject = subject.replace(gitmoji, PREFIXES[idx - 1])
-    console.log(`🧹 Replacing gitmoji label "${gitmoji}" with emoji ${PREFIXES[idx - 1]}`)
+    console.log(` 🧹 Replacing gitmoji label "${gitmoji}" with emoji ${PREFIXES[idx - 1]}`)
   }
 
   // 1. Separate subject from body with a blank line
@@ -59,7 +59,7 @@ if (gitmoji) {
 
   // 2. Limit the subject line to 50 characters
   if (subject.length > 50) {
-    console.log(`👮‍♀️ Message is ${subject.length} characters but ought to be below 50`)
+    console.log(` 👮 Message is ${subject.length} characters but ought to be below 50`)
     if (STRICT) process.exit(1)
   }
 
@@ -71,20 +71,20 @@ if (gitmoji) {
 
   // 4. Do not end the subject line with a period
   if (subject.endsWith('.')) {
-    console.log(`🧹 Removing period from end of subject line`)
+    console.log(` 🧹 Removing period from end of subject line`)
     subject = subject.slice(0, -1)
   }
 
   // 5. Use the imperative mood in the subject line
   if (['fixed', 'minor', 'removed', 'applied', 'adjusted', 'added', 'updated'].includes(firstWord.toLowerCase())) {
-    console.log(`👮 Use imperative mood instead i.e. you should be able to complete this line`)
-    console.log(`   "If applied, this commit will ..."`)
+    console.log(` 👮 Use imperative mood instead i.e. you should be able to complete this line`)
+    console.log(`    "If applied, this commit will ..."`)
     if (STRICT) process.exit(1)
   }
 
   // 6. Wrap the body at 72 characters
   if (body.find(b => b.length > 72)) {
-    console.log(`👮‍♂️ One or more lines in your body have a length above 72 characters`)
+    console.log(` 👮 One or more lines in your body have a length above 72 characters`)
     if (STRICT) process.exit(1)
   }
 
@@ -95,6 +95,6 @@ if (gitmoji) {
   fs.writeFileSync(file, message, 'utf8')
 
 } else {
-  console.log('💩 Commit message not prefixed with a gitmoji')
+  console.log(' 💩 Commit message not prefixed with a gitmoji')
   process.exit(1)
 }
