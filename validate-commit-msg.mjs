@@ -15,8 +15,8 @@ let [file, message] = process.argv.slice(2)
 
 const PREFIXES = [
   '🎨', ':art:', '⚡️', ':zap:', '🔥', ':fire:', '🐛', ':bug:',
-  '🚑', ':ambulance:', '✨', ':sparkles:', '📝', ':memo:', '🚀:rocket:',
-  '💄', ':lipstick:', '🎉:tada:', '✅', ':white_check_mark:', '🔒', ':lock:',
+  '🚑', ':ambulance:', '✨', ':sparkles:', '📝', ':memo:', '🚀', ':rocket:',
+  '💄', ':lipstick:', '🎉', ':tada:', '✅', ':white_check_mark:', '🔒', ':lock:',
   '🔖', ':bookmark:', '🚨', ':rotating_light:', '🚧', ':construction:', '💚', ':green_heart:',
   '⬇️', ':arrow_down:', '⬆️', ':arrow_up:', '📌', ':pushpin:', '👷', ':construction_worker:',
   '📈', ':chart_with_upwards_trend:', '♻️', ':recycle:', '➕', ':heavy_plus_sign:', '➖', ':heavy_minus_sign:',
