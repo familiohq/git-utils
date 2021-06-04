@@ -63,35 +63,16 @@ repositories.forEach(async repository => {
     }
   })
 
-  if (sparkles.length + bug.length + lipstick.length + other.length === 0) return
-
-  const formatEntries = entries => {
-    if (!entries || entries.length === 0) return 'None'
-
-    return entries.join('\n')
-  }
+  if ((sparkles.length + bug.length + lipstick.length + other.length) === 0) return
 
   const sections = [
     { title: 'New features', entries: sparkles },
     { title: 'Bugfixes', entries: bug },
     { title: 'UI fixes', entries: lipstick },
     { title: 'Other changes', entries: other },
-  ]
+  ].filter(s => s.entries.length > 0)
 
-  console.log(`## ${repository.replace('/', '')}
-
-${sections.filter(s => s.entries.length > 0).map(s => {
-  return `### ${s.title}\n${formatEntries(s.entries)}\n`
-}).filter(a => a).join('\n')}`)
+  console.log(`## ${repository.replace('/', '')}`)
+  console.log()
+  console.log(sections.map(s => `### ${s.title}\n${s.entries.join('\n')}\n`).join('\n'))
 })
-
-// let branch = await $`git branch --show-current`
-// await $`dep deploy --branch=${branch}`
-
-// await Promise.all([
-//   $`sleep 1; echo 1`,
-//   $`sleep 2; echo 2`,
-//   $`sleep 3; echo 3`,
-// ])
-
-// // git log --since="last month" --pretty=format:'%s,%ar'
