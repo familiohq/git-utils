@@ -52,11 +52,11 @@ repositories.forEach(async repository => {
   const other = []
 
   patchedEntries.forEach(entry => {
-    if (entry.startsWith('✨') || entry.startsWith('⚡️')) {
+    if (['✨', '⚡️'].some(a => entry.startsWith(a))) {
       sparkles.push(entry.trim())
-    } else if (entry.startsWith('🐛') || entry.startsWith('🚑') || entry.startsWith('🩹')) {
+    } else if (['🐛', '🚑', '🩹', '✏️'].some(a => entry.startsWith(a))) {
       bug.push(entry.trim())
-    } else if (entry.startsWith('💄') || entry.startsWith('🎨')) {
+    } else if (['💄', '🎨', '♿️'].some(a => entry.startsWith(a))) {
       lipstick.push(entry.trim())
     } else {
       other.push(entry.trim())
