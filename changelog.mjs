@@ -74,5 +74,5 @@ repositories.forEach(async repository => {
 
   console.log(`## ${repository.replace('/', '')}`)
   console.log()
-  console.log(sections.map(s => `### ${s.title}\n${s.entries.join('\n')}\n`).join('\n'))
+  console.log(sections.map(s => `### ${s.title}\n    ${s.entries.join('\n    ')}\n`).join('\n'))
 })
