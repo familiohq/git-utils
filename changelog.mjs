@@ -34,45 +34,50 @@ console.log()
 
 const repositories = (await $`ls -d */`).toString().split('\n').filter(a => a)
 repositories.forEach(async repository => {
-  cd(repository)
-  const entries = (await $`git log origin/master --since="${SINCE}" --pretty=format:'%s (%as)'`).toString().split('\n').filter(a => a).map(a => a.trim())
+  try {
+    cd(repository)
+    const entries = ((await $`git log origin/master --since="${SINCE}" --pretty=format:'%s (%as)'`).toString() || '').split('\n').filter(a => a).map(a => a.trim())
+    if (entries.length === 0) return
 
-  const patchedEntries = entries.map(entry => {
-    const gitmoji = PREFIXES.find(p => entry.startsWith(p))
-    if (gitmoji?.startsWith(':')) {
-      const idx = PREFIXES.findIndex(p => entry.startsWith(p))
-      entry = entry.replace(gitmoji, PREFIXES[idx - 1])
-    }
-    return entry
-  })
+    const patchedEntries = entries.map(entry => {
+      const gitmoji = PREFIXES.find(p => entry.startsWith(p))
+      if (gitmoji?.startsWith(':')) {
+        const idx = PREFIXES.findIndex(p => entry.startsWith(p))
+        entry = entry.replace(gitmoji, PREFIXES[idx - 1])
+      }
+      return entry
+    })
 
-  const sparkles = []
-  const bug = []
-  const lipstick = []
-  const other = []
+    const sparkles = []
+    const bug = []
+    const lipstick = []
+    const other = []
 
-  patchedEntries.forEach(entry => {
-    if (['✨', '⚡️'].some(a => entry.startsWith(a))) {
-      sparkles.push(entry.trim())
-    } else if (['🐛', '🚑', '🩹', '✏️'].some(a => entry.startsWith(a))) {
-      bug.push(entry.trim())
-    } else if (['💄', '🎨', '♿️'].some(a => entry.startsWith(a))) {
-      lipstick.push(entry.trim())
-    } else {
-      other.push(entry.trim())
-    }
-  })
+    patchedEntries.forEach(entry => {
+      if (['✨', '⚡️'].some(a => entry.startsWith(a))) {
+        sparkles.push(entry.trim())
+      } else if (['🐛', '🚑', '🩹', '✏️'].some(a => entry.startsWith(a))) {
+        bug.push(entry.trim())
+      } else if (['💄', '🎨', '♿️'].some(a => entry.startsWith(a))) {
+        lipstick.push(entry.trim())
+      } else {
+        other.push(entry.trim())
+      }
+    })
 
-  if ((sparkles.length + bug.length + lipstick.length + other.length) === 0) return
+    if ((sparkles.length + bug.length + lipstick.length + other.length) === 0) return
 
-  const sections = [
-    { title: 'New features', entries: sparkles },
-    { title: 'Bugfixes', entries: bug },
-    { title: 'UI fixes', entries: lipstick },
-    { title: 'Other changes', entries: other },
-  ].filter(s => s.entries.length > 0)
+    const sections = [
+      { title: 'New features', entries: sparkles },
+      { title: 'Bugfixes', entries: bug },
+      { title: 'UI fixes', entries: lipstick },
+      { title: 'Other changes', entries: other },
+    ].filter(s => s.entries.length > 0)
 
-  console.log(`## ${repository.replace('/', '')}`)
-  console.log()
-  console.log(sections.map(s => `### ${s.title}\n    ${s.entries.join('\n    ')}\n`).join('\n'))
+    console.log(`## ${repository.replace('/', '')}`)
+    console.log()
+    console.log(sections.map(s => `### ${s.title}\n    ${s.entries.join('\n    ')}\n`).join('\n'))
+  } catch (p) {
+    console.error(`!!! Failed to run through ${repository}. ${p.exitCode}: ${p.stderr}`)
+  }
 })
