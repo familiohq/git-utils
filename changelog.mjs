@@ -7,7 +7,7 @@
 
 $.verbose = false
 
-const SINCE = '1 month ago'
+const SINCE = argv.since || '1 month ago'
 
 const PREFIXES = [
   '🎨', ':art:', '⚡️', ':zap:', '🔥', ':fire:', '🐛', ':bug:',
@@ -32,10 +32,12 @@ console.log(`# CHANGELOG`)
 console.log(`Full changelog across projects since ${SINCE}.`)
 console.log()
 
-const repositories = (await $`ls -d */`).toString().split('\n').filter(a => a)
+const baseDirectory = (await $`pwd`).toString().trim()
+
+const repositories = argv.repositories?.split(',') || (await $`ls -d */`).toString().split('\n').filter(a => a)
 repositories.forEach(async repository => {
   try {
-    cd(repository)
+    cd(`${baseDirectory}/${repository}`)
     const entries = ((await $`git log origin/master --since="${SINCE}" --pretty=format:'%s (%as)'`).toString() || '').split('\n').filter(a => a).map(a => a.trim())
     if (entries.length === 0) return
 
@@ -74,10 +76,10 @@ repositories.forEach(async repository => {
       { title: 'Other changes', entries: other },
     ].filter(s => s.entries.length > 0)
 
-    console.log(`## ${repository.replace('/', '')}`)
+    console.log(chalk.blue(`## ${repository.replace('/', '')}`))
     console.log()
     console.log(sections.map(s => `### ${s.title}\n    ${s.entries.join('\n    ')}\n`).join('\n'))
   } catch (p) {
-    console.error(`!!! Failed to run through ${repository}. ${p.exitCode}: ${p.stderr}`)
+    console.error(`!!! Failed to run through ${repository}. ${p.exitCode}: ${p.stderr}`, p)
   }
 })
