@@ -4,6 +4,13 @@
 // USAGE:
 // 1. cd into folder with checked out git repositories
 // 2. execute `changelog.mjs`
+//
+// EXAMPLE:
+// zx changelog.mjs --since="1 month ago" --repositories="my-repo-1,my-repo-2"
+//
+// OPTIONS:
+// --since: since when to generate changelog (default: 1 month ago)
+// --repositories: comma separated list of repositories to generate changelog for (default: all repositories in current folder)
 
 $.verbose = false
 
