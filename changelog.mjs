@@ -17,36 +17,174 @@ $.verbose = false
 const SINCE = argv.since || '1 month ago'
 
 const PREFIXES = [
-  '🎨', ':art:', '⚡️', ':zap:', '🔥', ':fire:', '🐛', ':bug:',
-  '🚑', ':ambulance:', '✨', ':sparkles:', '📝', ':memo:', '🚀', ':rocket:',
-  '💄', ':lipstick:', '🎉', ':tada:', '✅', ':white_check_mark:', '🔒', ':lock:',
-  '🔖', ':bookmark:', '🚨', ':rotating_light:', '🚧', ':construction:', '💚', ':green_heart:',
-  '⬇️', ':arrow_down:', '⬆️', ':arrow_up:', '📌', ':pushpin:', '👷', ':construction_worker:',
-  '📈', ':chart_with_upwards_trend:', '♻️', ':recycle:', '➕', ':heavy_plus_sign:', '➖', ':heavy_minus_sign:',
-  '🔧', ':wrench:', '🔨', ':hammer:', '🌐', ':globe_with_meridians:', '✏️', ':pencil2:',
-  '💩', ':poop:', '⏪', ':rewind:', '🔀', ':twisted_rightwards_arrows:', '📦', ':package:',
-  '👽', ':alien:', '🚚', ':truck:', '📄', ':page_facing_up:', '💥', ':boom:',
-  '🍱', ':bento:', '♿️', ':wheelchair:', '💡', ':bulb:', '🍻', ':beers:',
-  '💬', ':speech_balloon:', '🗃', ':card_file_box:', '🔊', ':loud_sound:', '🔇', ':mute:',
-  '👥', ':busts_in_silhouette:', '🚸', ':children_crossing:', '🏗', ':building_construction:', '📱', ':iphone:',
-  '🤡', ':clown_face:', '🥚', ':egg:', '🙈', ':see_no_evil:', '📸', ':camera_flash:',
-  '⚗', ':alembic:', '🔍', ':mag:', '🏷️', ':label:', '🌱', ':seedling:',
-  '🚩', ':triangular_flag_on_post:', '🥅', ':goal_net:', '💫', ':dizzy:', '🗑', ':wastebasket:',
-  '🛂', ':passport_control:', '🩹', ':adhesive_bandage:', '🧐', ':monocle_face:', '⚰️', ':coffin:'
+  '🎨',
+  ':art:',
+  '⚡️',
+  ':zap:',
+  '🔥',
+  ':fire:',
+  '🐛',
+  ':bug:',
+  '🚑',
+  ':ambulance:',
+  '✨',
+  ':sparkles:',
+  '📝',
+  ':memo:',
+  '🚀',
+  ':rocket:',
+  '💄',
+  ':lipstick:',
+  '🎉',
+  ':tada:',
+  '✅',
+  ':white_check_mark:',
+  '🔒',
+  ':lock:',
+  '🔖',
+  ':bookmark:',
+  '🚨',
+  ':rotating_light:',
+  '🚧',
+  ':construction:',
+  '💚',
+  ':green_heart:',
+  '⬇️',
+  ':arrow_down:',
+  '⬆️',
+  ':arrow_up:',
+  '📌',
+  ':pushpin:',
+  '👷',
+  ':construction_worker:',
+  '📈',
+  ':chart_with_upwards_trend:',
+  '♻️',
+  ':recycle:',
+  '➕',
+  ':heavy_plus_sign:',
+  '➖',
+  ':heavy_minus_sign:',
+  '🔧',
+  ':wrench:',
+  '🔨',
+  ':hammer:',
+  '🌐',
+  ':globe_with_meridians:',
+  '✏️',
+  ':pencil2:',
+  '💩',
+  ':poop:',
+  '⏪',
+  ':rewind:',
+  '🔀',
+  ':twisted_rightwards_arrows:',
+  '📦',
+  ':package:',
+  '👽',
+  ':alien:',
+  '🚚',
+  ':truck:',
+  '📄',
+  ':page_facing_up:',
+  '💥',
+  ':boom:',
+  '🍱',
+  ':bento:',
+  '♿️',
+  ':wheelchair:',
+  '💡',
+  ':bulb:',
+  '🍻',
+  ':beers:',
+  '💬',
+  ':speech_balloon:',
+  '🗃',
+  ':card_file_box:',
+  '🔊',
+  ':loud_sound:',
+  '🔇',
+  ':mute:',
+  '👥',
+  ':busts_in_silhouette:',
+  '🚸',
+  ':children_crossing:',
+  '🏗',
+  ':building_construction:',
+  '📱',
+  ':iphone:',
+  '🤡',
+  ':clown_face:',
+  '🥚',
+  ':egg:',
+  '🙈',
+  ':see_no_evil:',
+  '📸',
+  ':camera_flash:',
+  '⚗',
+  ':alembic:',
+  '🔍',
+  ':mag:',
+  '🏷️',
+  ':label:',
+  '🌱',
+  ':seedling:',
+  '🚩',
+  ':triangular_flag_on_post:',
+  '🥅',
+  ':goal_net:',
+  '💫',
+  ':dizzy:',
+  '🗑',
+  ':wastebasket:',
+  '🛂',
+  ':passport_control:',
+  '🩹',
+  ':adhesive_bandage:',
+  '🧐',
+  ':monocle_face:',
+  '⚰️',
+  ':coffin:'
 ]
-
-console.log(`# CHANGELOG`)
-console.log(`Full changelog across projects since ${SINCE}.`)
-console.log()
 
 const baseDirectory = (await $`pwd`).toString().trim()
 
-const repositories = argv.repositories?.split(',') || (await $`ls -d */`).toString().split('\n').filter(a => a)
-repositories.forEach(async repository => {
+const repositories =
+  argv.repositories?.split(',') ||
+  (await $`ls -d */`)
+    .toString()
+    .split('\n')
+    .filter(a => a)
+
+console.log(`# CHANGELOG (since ${SINCE})`)
+console.log()
+
+for (const repository of repositories) {
   try {
     cd(`${baseDirectory}/${repository}`)
-    const entries = ((await $`git log origin/master --since="${SINCE}" --pretty=format:'%s (%as)'`).toString() || '').split('\n').filter(a => a).map(a => a.trim())
-    if (entries.length === 0) return
+
+    if (!(await fs.exists(`${baseDirectory}/${repository}/.git`))) {
+      // console.debug(`Skipping ${repository} as it is not a git repository.`)
+      continue
+    }
+
+    let origin = 'master'
+    const hasMasterBranch = (
+      (await $`git branch --list master`).toString() || ''
+    ).includes(origin)
+    if (!hasMasterBranch) {
+      // console.debug(`Fallback ${repository} to develop branch, since it has no master branch.`)
+      origin = 'develop'
+    }
+    const entries = (
+      (
+        await $`git log origin/${origin} --since="${SINCE}" --pretty=format:'%s (%as)'`
+      ).toString() || ''
+    )
+      .split('\n')
+      .filter(a => a)
+      .map(a => a.trim())
+    if (entries.length === 0) continue
 
     const patchedEntries = entries.map(entry => {
       const gitmoji = PREFIXES.find(p => entry.startsWith(p))
@@ -60,6 +198,7 @@ repositories.forEach(async repository => {
     const sparkles = []
     const bug = []
     const lipstick = []
+    const fire = []
     const other = []
 
     patchedEntries.forEach(entry => {
@@ -69,24 +208,42 @@ repositories.forEach(async repository => {
         bug.push(entry.trim())
       } else if (['💄', '🎨', '♿️'].some(a => entry.startsWith(a))) {
         lipstick.push(entry.trim())
+      } else if (['🔥'].some(a => entry.startsWith(a))) {
+        fire.push(entry.trim())
       } else {
         other.push(entry.trim())
       }
     })
 
-    if ((sparkles.length + bug.length + lipstick.length + other.length) === 0) return
+    if (
+      sparkles.length +
+        bug.length +
+        lipstick.length +
+        fire.length +
+        other.length ===
+      0
+    )
+      continue
 
     const sections = [
-      { title: 'New features', entries: sparkles },
-      { title: 'Bugfixes', entries: bug },
-      { title: 'UI fixes', entries: lipstick },
-      { title: 'Other changes', entries: other },
+      { title: `New features (${sparkles.length})`, entries: sparkles },
+      { title: `Bugfixes (${bug.length})`, entries: bug },
+      { title: `UI fixes (${lipstick.length})`, entries: lipstick },
+      { title: `Cleanup (${fire.length})`, entries: fire },
+      { title: `Other changes (${other.length})`, entries: other }
     ].filter(s => s.entries.length > 0)
 
     console.log(chalk.blue(`## ${repository.replace('/', '')}`))
     console.log()
-    console.log(sections.map(s => `### ${s.title}\n    ${s.entries.join('\n    ')}\n`).join('\n'))
+    console.log(
+      sections
+        .map(s => `### ${s.title}\n    ${s.entries.join('\n    ')}\n`)
+        .join('\n')
+    )
   } catch (p) {
-    console.error(`!!! Failed to run through ${repository}. ${p.exitCode}: ${p.stderr}`, p)
+    console.error(
+      `!!! Failed to run through ${repository}. ${p.exitCode}: ${p.stderr}`,
+      p
+    )
   }
-})
+}
