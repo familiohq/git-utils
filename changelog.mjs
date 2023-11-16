@@ -12,6 +12,8 @@
 // --since: since when to generate changelog (default: 1 month ago)
 // --repositories: comma separated list of repositories to generate changelog for (default: all repositories in current folder)
 
+import { argv, chalk, fs } from 'zx'
+
 $.verbose = false
 
 const SINCE = argv.since || '1 month ago'
